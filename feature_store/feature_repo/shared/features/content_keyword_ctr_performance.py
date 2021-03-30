@@ -1,9 +1,18 @@
 from datetime import datetime
 from tecton import TemporalAggregateFeaturePackage, FeatureAggregation, sql_transformation, MaterializationConfig
 from feature_repo.shared import data_sources, entities
+from tecton.feature_views import aggregate_feature_view, feature_view
+from tecton.transformations.new_transformation import transformation
+from tecton.feature_views.feature_view import Input
 
-@sql_transformation(inputs=data_sources.ad_impressions_stream)
-def content_keyword_ctr_performance_transformer(input_df):
+# TODO: remove this when we rename declarative classes
+batch_feature_view = feature_view
+stream_feature_view = feature_view
+batch_window_aggregate_feature_view = aggregate_feature_view
+stream_window_aggregate_feature_view = aggregate_feature_view
+
+@transformation(mode='spark_sql')
+def content_keyword_ctr_performance_transformer(ad_impressions):
     return f"""
         select
             content_keyword,
@@ -11,46 +20,52 @@ def content_keyword_ctr_performance_transformer(input_df):
             1 as impression,
             timestamp
         from
-            {input_df}
+            {ad_impressions}
         """
 
 
-content_keyword_ctr_performance = TemporalAggregateFeaturePackage(
-    name="content_keyword_ctr_performance",
-    description="[Stream Feature] The aggregate CTR of a content_keyword across all impressions (clicks / total impressions)",
+@stream_window_aggregate_feature_view(
+    mode='pipeline',
     entities=[entities.content_keyword_entity],
-    transformation=content_keyword_ctr_performance_transformer,
-    aggregation_slide_period="1h",
+    inputs={
+        "ad_impressions": Input(data_sources.ad_impressions_stream)
+    },
+    aggregation_slide_period='1h',
     aggregations=[
         FeatureAggregation(column="impression", function="count", time_windows=["1h", "12h", "24h","72h","168h"]),
-        FeatureAggregation(column="clicked", function="sum", time_windows=["12h", "24h","72h","168h"])
-        ],
-    materialization=MaterializationConfig(
-        online_enabled=True,
-        offline_enabled=True,
-        feature_start_time=datetime(2020, 6, 1),
-    ),
+        FeatureAggregation(column="clicked", function="sum", time_windows=["1h", "12h", "24h","72h","168h"])
+    ],
+    online=True,
+    offline=True,
+    feature_start_time=datetime(2021, 1, 6),
     family='ad_serving',
-    tags={'release': 'development'},
-    owner="matt@tecton.ai"
+    tags={
+        'release': 'development'
+    },
+    owner='matt@tecton.ai'
 )
+def content_keyword_ctr_performance(ad_impressions):
+    return content_keyword_ctr_performance_transformer(ad_impressions)
 
-content_keyword_ctr_performance_v2 = TemporalAggregateFeaturePackage(
-    name="content_keyword_ctr_performance:v2",
-    description="[Stream Feature] The aggregate CTR of a content_keyword across all impressions (clicks / total impressions)",
+@stream_window_aggregate_feature_view(
+    mode='pipeline',
     entities=[entities.content_keyword_entity],
-    transformation=content_keyword_ctr_performance_transformer,
-    aggregation_slide_period="1h",
+    inputs={
+        "ad_impressions": Input(data_sources.ad_impressions_stream)
+    },
+    aggregation_slide_period='1h',
     aggregations=[
         FeatureAggregation(column="impression", function="count", time_windows=["1h", "3h", "12h", "24h","72h","168h"]),
         FeatureAggregation(column="clicked", function="sum", time_windows=["1h", "3h", "12h", "24h","72h","168h"])
-        ],
-    materialization=MaterializationConfig(
-        online_enabled=True,
-        offline_enabled=True,
-        feature_start_time=datetime(2020, 6, 1),
-    ),
+    ],
+    online=True,
+    offline=True,
+    feature_start_time=datetime(2021, 1, 6),
     family='ad_serving',
-    tags={'release': 'development'},
-    owner="matt@tecton.ai"
+    tags={
+        'release': 'development'
+    },
+    owner='matt@tecton.ai'
 )
+def content_keyword_ctr_performance__v2(ad_impressions):
+    return content_keyword_ctr_performance_transformer(ad_impressions)

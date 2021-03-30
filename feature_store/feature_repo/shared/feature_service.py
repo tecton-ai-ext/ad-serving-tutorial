@@ -5,6 +5,8 @@ from feature_repo.shared.features.ad_is_displayed_as_banner import ad_is_display
 from feature_repo.shared.features.user_ad_impression_counts import user_ad_impression_counts
 
 
+# TODO: featureservice doesnt fully support featureviews yet
+"""
 ctr_prediction_service = FeatureService(
     name='ctr_prediction_service',
     description='A FeatureService used for supporting a CTR prediction model.',
@@ -33,3 +35,4 @@ online_ctr_prediction_service = FeatureService(
     tags={'release': 'experimental'},
     owner="matt@tecton.ai",
 )
+"""

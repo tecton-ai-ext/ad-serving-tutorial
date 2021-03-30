@@ -1,6 +1,16 @@
 import pandas
 from tecton import RequestContext, online_transformation, OnlineFeaturePackage
 from pyspark.sql.types import StringType, LongType, StructType, StructField
+from tecton.feature_views import aggregate_feature_view, feature_view, on_demand_feature_view
+from tecton.feature_views.feature_view import Input
+from tecton.transformations.const import const
+from tecton.transformations.new_transformation import transformation
+
+# TODO: remove this when we rename declarative classes
+batch_feature_view = feature_view
+stream_feature_view = feature_view
+batch_window_aggregate_feature_view = aggregate_feature_view
+stream_window_aggregate_feature_view = aggregate_feature_view
 
 request_context = RequestContext(schema={
     "ad_display_placement": StringType(),
@@ -8,9 +18,18 @@ request_context = RequestContext(schema={
 
 output_schema = StructType()
 output_schema.add(StructField("ad_is_displayed_as_banner", LongType()))
+# TODO(fwv3): this isnt the final form
 
-@online_transformation(request_context=request_context, output_schema=output_schema)
-def ad_is_displayed_as_banner_transformer(ad_display_placement: pandas.Series):
+@on_demand_feature_view(
+    output_schema=output_schema,
+    mode='pandas',
+    inputs={},
+    entities=[],
+    family='ad_serving',
+    tags={'release': 'production'},
+    owner="ravi@tecton.ai"
+)
+def ad_is_displayed_as_banner(ad_display_placement: pandas.Series):
     import pandas as pd
 
     series = []
@@ -21,11 +40,3 @@ def ad_is_displayed_as_banner_transformer(ad_display_placement: pandas.Series):
 
     return pd.DataFrame(series)
 
-ad_is_displayed_as_banner = OnlineFeaturePackage(
-    name="ad_is_displayed_as_banner",
-    description="[Online Feature] A feature describing if an ad is displayed as a banner, computed at retrieval time.",
-    transformation=ad_is_displayed_as_banner_transformer,
-    family='ad_serving',
-    tags={'release': 'production'},
-    owner="ravi@tecton.ai"
-)
