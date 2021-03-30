@@ -30,17 +30,10 @@ def ad_ground_truth_ctr_performance_7_days(ad_impressions):
     return f"""
     SELECT
         ad_id,
-        sum(clicked) OVER (
-            partition by ad_id
-            order by timestamp
-            range between interval 7 days preceding and current row
-        ) as ad_total_clicks_7days,
-        count(1) OVER (
-            partition by ad_id
-            order by timestamp
-            range between interval 7 days preceding and current row
-        ) as ad_total_impressions_7days,
-        timestamp
+        sum(clicked),
+        count(1),
+        window(timestamp, "7 days", "1 day").end as timestamp
     FROM
         {ad_impressions}
+    GROUP BY ad_id, window(timestamp, "7 days", "1 day")
     """

@@ -14,17 +14,16 @@ stream_window_aggregate_feature_view = aggregate_feature_view
 
 @transformation(mode="spark_sql")
 def partner_ctr_performance_transformer(ad_impressions, days):
+    window_expr = f"window(timestamp, '{days} days', '1 day')"
     return f"""
     SELECT
         partner_id,
-        avg(clicked) OVER (
-            partition by partner_id
-            order by timestamp
-            range between interval {days} days preceding and current row
-        ) as avg_clicked_{days}d,
-        timestamp
+        avg(clicked) as avg_clicked_{days}d,
+        {window_expr}.end as timestamp
     FROM
         {ad_impressions}
+    GROUP BY
+        partner_id, {window_expr}
     """
 
 @batch_feature_view(

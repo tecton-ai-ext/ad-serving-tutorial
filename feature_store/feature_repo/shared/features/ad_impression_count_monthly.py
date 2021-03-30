@@ -14,7 +14,7 @@ stream_window_aggregate_feature_view = aggregate_feature_view
 @batch_feature_view(
     mode='pyspark',
     inputs={
-        'ad_impressions': Input(data_sources.ad_impressions_batch)
+        'ad_impressions': Input(data_sources.ad_impressions_batch, window='30d')
     },
     entities=[entities.ad_entity],
     batch_schedule='1d',
@@ -29,6 +29,8 @@ stream_window_aggregate_feature_view = aggregate_feature_view
 )
 def ad_impression_count_monthly(ad_impressions):
     import pyspark.sql.functions as F
-    truncated_date_view = ad_impressions.withColumn('timestamp', F.date_trunc('day', F.col('timestamp')))
-    return truncated_date_view.groupBy('ad_id', 'timestamp').agg(F.count(F.lit(1)).alias("ad_impression_count"))
+    window_spec = F.window('timestamp', '30 days', '1 day')
+    df = ad_impressions.withColumn('timestamp', F.date_trunc('day', F.col('timestamp')))
+    df = df.groupBy('ad_id', window_spec).agg(F.count(F.lit(1)).alias("ad_impression_count"))
+    return df.select(df.window.end.cast('timestamp').alias('timestamp'), 'ad_id', 'ad_impression_count')
 
