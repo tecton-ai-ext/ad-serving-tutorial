@@ -20,6 +20,7 @@ output_schema = StructType()
 output_schema.add(StructField("ad_is_displayed_as_banner", LongType()))
 # TODO(fwv3): this isnt the final form
 
+"""
 @on_demand_feature_view(
     output_schema=output_schema,
     mode='pandas',
@@ -40,3 +41,4 @@ def ad_is_displayed_as_banner(ad_display_placement: pandas.Series):
 
     return pd.DataFrame(series)
 
+"""
