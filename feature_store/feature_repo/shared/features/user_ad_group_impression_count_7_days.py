@@ -19,8 +19,8 @@ stream_window_aggregate_feature_view = aggregate_feature_view
     inputs={
         "ad_impressions": Input(data_sources.ad_impressions_batch, window='7 days')
     },
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 1),
     ttl='1d',
     batch_schedule='1d',

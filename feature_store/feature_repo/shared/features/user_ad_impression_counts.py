@@ -22,8 +22,8 @@ stream_window_aggregate_feature_view = aggregate_feature_view
     aggregations=[
         FeatureAggregation(column='impression', function='count', time_windows=['1h', '12h', '24h', '72h', '168h']),
     ],
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 5),
     family='ad_serving',
     tags={'release': 'development'},

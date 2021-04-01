@@ -35,8 +35,8 @@ def content_keyword_ctr_performance_transformer(ad_impressions):
         FeatureAggregation(column="impression", function="count", time_windows=["1h", "12h", "24h","72h","168h"]),
         FeatureAggregation(column="clicked", function="sum", time_windows=["1h", "12h", "24h","72h","168h"])
     ],
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 6),
     family='ad_serving',
     tags={
@@ -58,8 +58,8 @@ def content_keyword_ctr_performance(ad_impressions):
         FeatureAggregation(column="impression", function="count", time_windows=["1h", "3h", "12h", "24h","72h","168h"]),
         FeatureAggregation(column="clicked", function="sum", time_windows=["1h", "3h", "12h", "24h","72h","168h"])
     ],
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 6),
     family='ad_serving',
     tags={
