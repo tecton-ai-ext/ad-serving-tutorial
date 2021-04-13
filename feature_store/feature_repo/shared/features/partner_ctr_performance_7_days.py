@@ -30,12 +30,12 @@ def partner_ctr_performance_transformer(ad_impressions, days):
     mode='pipeline',
     entities=[e.partner_entity],
     online=False,
-    offline=True,
+    offline=False,
     feature_start_time=datetime(2021, 1, 1),
     ttl='1d',
     batch_schedule='1d',
     inputs={
-        'ad_impressions': Input(data_sources.ad_impressions_batch)
+        'ad_impressions': Input(data_sources.ad_impressions_batch, window="7d")
     },
     family='ad_serving',
     tags={'release': 'development', ':production': 'true'},
@@ -53,7 +53,7 @@ def partner_ctr_performance__7d(ad_impressions):
     ttl='1d',
     batch_schedule='1d',
     inputs={
-        'ad_impressions': Input(data_sources.ad_impressions_batch)
+        'ad_impressions': Input(data_sources.ad_impressions_batch, window="14d")
     },
     family='ad_serving',
     tags={'release': 'development', ':production': 'true'},
@@ -71,7 +71,7 @@ def partner_ctr_performance__14d(ad_impressions):
     ttl='1d',
     batch_schedule='1d',
     inputs={
-        'ad_impressions': Input(data_sources.ad_impressions_batch)
+        'ad_impressions': Input(data_sources.ad_impressions_batch, window="28d")
     },
     family='ad_serving',
     tags={'release': 'development', ':production': 'true'},
