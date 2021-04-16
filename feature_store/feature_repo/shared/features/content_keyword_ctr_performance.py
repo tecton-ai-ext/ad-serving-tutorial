@@ -1,15 +1,10 @@
 from datetime import datetime
 from tecton import TemporalAggregateFeaturePackage, FeatureAggregation, sql_transformation, MaterializationConfig
 from feature_repo.shared import data_sources, entities
-from tecton.feature_views import aggregate_feature_view, feature_view
+from tecton.feature_views import stream_window_aggregate_feature_view
 from tecton.transformations.new_transformation import transformation
 from tecton.feature_views.feature_view import Input
 
-# TODO: remove this when we rename declarative classes
-batch_feature_view = feature_view
-stream_feature_view = feature_view
-batch_window_aggregate_feature_view = aggregate_feature_view
-stream_window_aggregate_feature_view = aggregate_feature_view
 
 @transformation(mode='spark_sql')
 def content_keyword_ctr_performance_transformer(ad_impressions):
@@ -65,7 +60,8 @@ def content_keyword_ctr_performance(ad_impressions):
     tags={
         'release': 'development'
     },
-    owner='matt@tecton.ai'
+    owner='matt@tecton.ai',
+    name_override="content_keyword_ctr_performance:v2"
 )
-def content_keyword_ctr_performance__v2(ad_impressions):
+def content_keyword_ctr_performance_v2(ad_impressions):
     return content_keyword_ctr_performance_transformer(ad_impressions)

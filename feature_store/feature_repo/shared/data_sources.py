@@ -1,13 +1,11 @@
 from tecton import (
-    VirtualDataSource,
+    BatchDataSource,
+    StreamDataSource,
     FileDSConfig,
     HiveDSConfig,
     KinesisDSConfig
 )
 
-# TODO: remove this when we rename declarative classes
-BatchDataSource = VirtualDataSource
-StreamDataSource = VirtualDataSource
 
 from tecton_spark.function_serialization import inlined
 

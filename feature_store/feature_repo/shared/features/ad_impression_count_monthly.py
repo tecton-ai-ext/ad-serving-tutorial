@@ -2,14 +2,8 @@ from tecton import TemporalFeaturePackage, pyspark_transformation, Materializati
 from feature_repo.shared import data_sources, entities
 from datetime import datetime
 
-from tecton.feature_views import feature_view, aggregate_feature_view
+from tecton.feature_views import batch_feature_view
 from tecton.feature_views.feature_view import Input
-
-# TODO: remove this when we rename declarative classes
-batch_feature_view = feature_view
-stream_feature_view = feature_view
-batch_window_aggregate_feature_view = aggregate_feature_view
-stream_window_aggregate_feature_view = aggregate_feature_view
 
 @batch_feature_view(
     mode='pyspark',

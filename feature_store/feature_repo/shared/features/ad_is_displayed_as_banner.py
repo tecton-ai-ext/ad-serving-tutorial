@@ -1,16 +1,11 @@
 import pandas
 from tecton import RequestContext, online_transformation, OnlineFeaturePackage
 from pyspark.sql.types import StringType, LongType, StructType, StructField
-from tecton.feature_views import aggregate_feature_view, feature_view, on_demand_feature_view
 from tecton.feature_views.feature_view import Input
 from tecton.transformations.const import const
 from tecton.transformations.new_transformation import transformation
 
-# TODO: remove this when we rename declarative classes
-batch_feature_view = feature_view
-stream_feature_view = feature_view
-batch_window_aggregate_feature_view = aggregate_feature_view
-stream_window_aggregate_feature_view = aggregate_feature_view
+
 
 request_context = RequestContext(schema={
     "ad_display_placement": StringType(),

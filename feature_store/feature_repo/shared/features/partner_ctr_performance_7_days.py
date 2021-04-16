@@ -1,16 +1,11 @@
 from tecton import sql_transformation, TemporalFeaturePackage, MaterializationConfig
 from feature_repo.shared import entities as e, data_sources
 from datetime import datetime
-from tecton.feature_views import aggregate_feature_view, feature_view
+from tecton.feature_views import batch_feature_view
 from tecton.feature_views.feature_view import Input
 from tecton.transformations.const import const
 from tecton.transformations.new_transformation import transformation
 
-# TODO: remove this when we rename declarative classes
-batch_feature_view = feature_view
-stream_feature_view = feature_view
-batch_window_aggregate_feature_view = aggregate_feature_view
-stream_window_aggregate_feature_view = aggregate_feature_view
 
 @transformation(mode="spark_sql")
 def partner_ctr_performance_transformer(ad_impressions, days):
