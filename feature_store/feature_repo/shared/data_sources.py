@@ -109,3 +109,16 @@ events_vds = VirtualDataSource(
             'release': 'production'
         }
 )
+
+ad_users_batch = VirtualDataSource(
+    name="ad_users_batch",
+    batch_ds_config= FileDSConfig(
+        uri='s3://jack-datasets/demos/ad-serving/user_age.parquet',
+        file_format='parquet'
+    ),
+    family='ad_serving',
+    tags={
+        'release': 'production',
+        'source': 'mobile'
+    }
+)
