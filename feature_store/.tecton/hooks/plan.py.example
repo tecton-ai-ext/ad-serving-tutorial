@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import Optional
 import pytest
 
+def run() -> Optional[int]:
+    return test()
+
 def test() -> Optional[int]:
     # Run pytest on all *_test.py and test_*.py files and return:
     # - 0 if all tests pass
