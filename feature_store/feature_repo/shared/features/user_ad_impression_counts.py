@@ -1,9 +1,30 @@
 from datetime import datetime
 from tecton import TemporalAggregateFeaturePackage, FeatureAggregation, sql_transformation, MaterializationConfig
 from feature_repo.shared import data_sources, entities
+from tecton.feature_views import stream_window_aggregate_feature_view
+from tecton.feature_views.feature_view import Input
+from tecton.transformations.const import const
+from tecton.transformations.new_transformation import transformation
 
-@sql_transformation(inputs=data_sources.ad_impressions_stream)
-def user_ad_impression_counts_transformer(input_df):
+
+@stream_window_aggregate_feature_view(
+    mode="spark_sql",
+    inputs={
+        "ad_impressions": Input(data_sources.ad_impressions_stream)
+    },
+    entities=[entities.user_entity, entities.ad_entity],
+    aggregation_slide_period='1h',
+    aggregations=[
+        FeatureAggregation(column='impression', function='count', time_windows=['1h', '12h', '24h', '72h', '168h']),
+    ],
+    online=False,
+    offline=False,
+    feature_start_time=datetime(2021, 1, 5),
+    family='ad_serving',
+    tags={'release': 'development'},
+    owner="mike@tecton.ai"
+)
+def user_ad_impression_counts(ad_impressions):
     return f"""
         select
             user_uuid,
@@ -11,23 +32,5 @@ def user_ad_impression_counts_transformer(input_df):
             1 as impression,
             timestamp
         from
-            {input_df}
+            {ad_impressions}
         """
-
-
-user_ad_impression_counts = TemporalAggregateFeaturePackage(
-    name="user_ad_impression_counts",
-    description="[Stream Feature] The number of times a given user has been shown a given ad over various time windows",
-    entities=[entities.user_entity, entities.ad_entity],
-    transformation=user_ad_impression_counts_transformer,
-    aggregation_slide_period="1h",
-    aggregations=[FeatureAggregation(column="impression", function="count", time_windows=["1h", "12h", "24h","72h","168h"])],
-    materialization=MaterializationConfig(
-        online_enabled=True,
-        offline_enabled=True,
-        feature_start_time=datetime(2020, 6, 1),
-    ),
-    family='ad_serving',
-    tags={'release': 'development'},
-    owner="jay@tecton.ai"
-)

@@ -1,9 +1,11 @@
 from tecton import (
-    VirtualDataSource,
+    BatchDataSource,
+    StreamDataSource,
     FileDSConfig,
     HiveDSConfig,
     KinesisDSConfig
 )
+
 
 from tecton_spark.function_serialization import inlined
 
@@ -77,7 +79,7 @@ ad_impressions_kinesis = KinesisDSConfig(
     options={'roleArn': 'arn:aws:iam::472542229217:role/demo-cross-account-kinesis-ro'}
 )
 
-ad_impressions_stream = VirtualDataSource(name="ad_impressions_stream", 
+ad_impressions_stream = StreamDataSource(name="ad_impressions_stream",
     batch_ds_config=ad_impressions_hive, 
     stream_ds_config=ad_impressions_kinesis,
     family='ad_serving',
@@ -86,7 +88,7 @@ ad_impressions_stream = VirtualDataSource(name="ad_impressions_stream",
         'source': 'mobile'
     }
 )
-ad_impressions_batch = VirtualDataSource(
+ad_impressions_batch = BatchDataSource(
     name="ad_impressions_batch", 
     batch_ds_config=ad_impressions_hive,
     family='ad_serving',
@@ -101,7 +103,7 @@ events_config = FileDSConfig(
         file_format="parquet"
 )
 
-events_vds = VirtualDataSource(
+events_vds = BatchDataSource(
         name='sample_events_for_model',
         batch_ds_config=events_config,
         family='ad_serving',
