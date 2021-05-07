@@ -16,8 +16,8 @@ from tecton.feature_views.feature_view import Input
         FeatureAggregation(column='impression', function='count', time_windows=['1h', '12h', '24h', '72h', '168h']),
         FeatureAggregation(column='clicked', function='sum', time_windows=['1h', '12h', '24h', '72h', '168h'])
     ],
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 5),
     batch_schedule='1d',
     family='ad_serving',
@@ -46,8 +46,8 @@ def ad_group_ctr_performance(ad_impressions):
         FeatureAggregation(column='impression', function='count', time_windows=['1h', '12h', '24h', '72h', '168h']),
         FeatureAggregation(column='clicked', function='sum', time_windows=['1h', '12h', '24h', '72h', '168h'])
     ],
-    online=True,
-    offline=True,
+    online=False,
+    offline=False,
     feature_start_time=datetime(2021, 1, 5),
     batch_schedule='1d',
     family='ad_serving',
@@ -65,4 +65,3 @@ def ad_group_ctr_performance_batch(ad_impressions):
         from
             {ad_impressions}
         """
-

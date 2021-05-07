@@ -5,6 +5,7 @@ from feature_repo.shared.features.user_total_ad_frequency_counts import user_tot
 #from feature_repo.shared.features.ad_is_displayed_as_banner import ad_is_displayed_as_banner
 from feature_repo.shared.features.user_ad_impression_counts import user_ad_impression_counts
 
+"""
 test_fs = FeatureService(
     name="simple_fs",
     online_serving_enabled=True,
@@ -12,6 +13,7 @@ test_fs = FeatureService(
         ad_group_ctr_performance
     ]
 )
+"""
 
 """
 # TODO: featureservice doesnt fully support featureviews yet

@@ -14,8 +14,8 @@ from tecton.transformations.const import const
 @batch_window_aggregate_feature_view(
 		mode="pyspark",
 		entities=[e.ad_entity],
-		online=True,
-		offline=True,
+		online=False,
+		offline=False,
 		inputs={"ad_impressions": Input(data_sources.ad_impressions_batch)},
 		feature_start_time=datetime(2021,4,1),
         		aggregation_slide_period="12h",
