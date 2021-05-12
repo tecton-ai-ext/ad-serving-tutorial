@@ -7,7 +7,7 @@ from datetime import datetime
 def user_ad_group_impression_count_7_days_transformer(context, input_df):
     import pyspark.sql.functions as F
 
-    user_website_views = input_df.groupBy("user_uuid", "ad_group_id").agg(F.count(F.col("*")).alias("user_ad_group_impressions_7_days"))
+    user_website_views = input_df.groupBy(F.col("user_uuid"), F.col("ad_group_id")).agg(F.count(F.col("*")).alias("user_ad_group_impressions_7_days"))
     user_website_views = user_website_views.withColumn("timestamp", F.to_timestamp(F.lit(context.feature_data_end_time)))
     return user_website_views
 
