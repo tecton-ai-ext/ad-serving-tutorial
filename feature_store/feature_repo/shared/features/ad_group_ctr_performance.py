@@ -53,7 +53,7 @@ def ad_group_ctr_performance(ad_impressions):
     family='ad_serving',
     tags={'release': 'development'},
     owner="mike@tecton.ai",
-    name_override="ad_group_ctr_performance:batch"
+    # name_override="ad_group_ctr_performance:batch"
 )
 def ad_group_ctr_performance_batch(ad_impressions):
     return f"""
