@@ -52,7 +52,7 @@ def ad_stream_translator(df):
             col("payload.is_pwa") == "True",
             True).when(
             col("payload.is_pwa") == "False",
-            False).alias("is_pwa"),          
+            False).alias("is_pwa"),
           col("payload.user_uuid").alias("user_uuid"),
           from_utc_timestamp("payload.timestamp", "UTC").alias("timestamp"),
           col("payload.datestr").alias("datestr")
@@ -77,8 +77,8 @@ ad_impressions_kinesis = KinesisDSConfig(
     options={'roleArn': 'arn:aws:iam::472542229217:role/demo-cross-account-kinesis-ro'}
 )
 
-ad_impressions_stream = VirtualDataSource(name="ad_impressions_stream", 
-    batch_ds_config=ad_impressions_hive, 
+ad_impressions_stream = VirtualDataSource(name="ad_impressions_stream",
+    batch_ds_config=ad_impressions_hive,
     stream_ds_config=ad_impressions_kinesis,
     family='ad_serving',
     tags={
@@ -87,7 +87,7 @@ ad_impressions_stream = VirtualDataSource(name="ad_impressions_stream",
     }
 )
 ad_impressions_batch = VirtualDataSource(
-    name="ad_impressions_batch", 
+    name="ad_impressions_batch",
     batch_ds_config=ad_impressions_hive,
     family='ad_serving',
     tags={
@@ -104,6 +104,20 @@ events_config = FileDSConfig(
 events_vds = VirtualDataSource(
         name='sample_events_for_model',
         batch_ds_config=events_config,
+        family='ad_serving',
+        tags={
+            'release': 'production'
+        }
+)
+
+user_config = FileDSConfig(
+        uri='s3://ad-impressions-data/user_info.pq',
+        file_format="parquet"
+)
+
+user_info = VirtualDataSource(
+        name='user_info',
+        batch_ds_config=user_config,
         family='ad_serving',
         tags={
             'release': 'production'
