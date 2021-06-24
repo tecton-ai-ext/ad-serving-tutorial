@@ -9,7 +9,7 @@ from tecton_spark.function_serialization import inlined
 
 
 events_config = FileDSConfig(
-        uri='s3://ad-impressions-data/ctr_events.pq',
+        uri='s3://tecton.ai.public/ad-impressions-data/ctr_events.pq',
         file_format="parquet"
 )
 
