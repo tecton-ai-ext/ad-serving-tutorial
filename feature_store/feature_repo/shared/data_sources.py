@@ -98,7 +98,8 @@ ad_impressions_batch = VirtualDataSource(
 
 events_config = FileDSConfig(
         uri='s3://ad-impressions-data/ctr_events.pq',
-        file_format="parquet"
+        file_format="parquet",
+        timestamp_column_name='timestamp'
 )
 
 events_vds = VirtualDataSource(
@@ -112,7 +113,8 @@ events_vds = VirtualDataSource(
 
 user_config = FileDSConfig(
         uri='s3://ad-impressions-data/user_info.pq',
-        file_format="parquet"
+        file_format="parquet",
+        timestamp_column_name='timestamp'
 )
 
 user_info = VirtualDataSource(
